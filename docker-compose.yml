@@ -1,0 +1,38 @@
+services:
+  glpi:
+    build: .
+    container_name: glpi
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+    volumes:
+      - glpi_files:/var/www/html/files
+      - glpi_config:/var/www/html/config
+      - glpi_marketplace:/var/www/html/marketplace
+    environment:
+      - TZ=UTC
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost/']
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # Optional MariaDB container - remove if using external database
+  # db:
+  #   image: mariadb:10.11
+  #   container_name: glpi-db
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: glpi-root-password
+  #     MYSQL_DATABASE: glpi
+  #     MYSQL_USER: glpi
+  #     MYSQL_PASSWORD: glpi-password
+  #   volumes:
+  #     - glpi_db:/var/lib/mysql
+  #   command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+volumes:
+  glpi_files:
+  glpi_config:
+  glpi_marketplace:
+  # glpi_db:
