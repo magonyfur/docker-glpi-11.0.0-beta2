@@ -1,38 +1,52 @@
+version: '3.8'
+
 services:
   glpi:
     build: .
-    container_name: glpi
+    container_name: glpi-app
     restart: unless-stopped
     ports:
       - '8080:80'
     volumes:
       - glpi_files:/var/www/html/files
       - glpi_config:/var/www/html/config
-      - glpi_marketplace:/var/www/html/marketplace
     environment:
       - TZ=UTC
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost/']
-      interval: 30s
-      timeout: 3s
-      retries: 3
+      - DB_HOST=glpi-db # Internal hostname
+      - DB_PORT=3306 # Internal port (always 3306 inside network)
+    depends_on:
+      - glpi-db
+    networks:
+      - glpi-network
 
-  # Optional MariaDB container - remove if using external database
-  # db:
-  #   image: mariadb:10.11
-  #   container_name: glpi-db
-  #   restart: unless-stopped
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: glpi-root-password
-  #     MYSQL_DATABASE: glpi
-  #     MYSQL_USER: glpi
-  #     MYSQL_PASSWORD: glpi-password
-  #   volumes:
-  #     - glpi_db:/var/lib/mysql
-  #   command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  glpi-db:
+    image: mysql:8.0
+    container_name: glpi-db
+    restart: unless-stopped
+    ports:
+      - '3307:3306' # Map host port 3307 to container port 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: glpi_root_password_123
+      MYSQL_DATABASE: glpi_db
+      MYSQL_USER: glpi_user
+      MYSQL_PASSWORD: glpi_password_123
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - glpi_mysql_data:/var/lib/mysql
+      - glpi_mysql_config:/etc/mysql/conf.d
+    command: --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --explicit_defaults_for_timestamp=1
+    networks:
+      - glpi-network
 
 volumes:
   glpi_files:
   glpi_config:
-  glpi_marketplace:
-  # glpi_db:
+  glpi_mysql_data:
+  glpi_mysql_config:
+
+networks:
+  glpi-network:
+    driver: bridge
