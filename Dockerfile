@@ -21,7 +21,7 @@ RUN mkdir -p /var/www/html/public \
 
 # Download and extract GLPI to temporary location
 RUN mkdir -p /tmp/glpi \
-    && curl -fsSL https://github.com/glpi-project/glpi/releases/download/11.0.0-beta2/glpi-11.0.0-beta2.tgz -o /tmp/glpi.tgz \
+    && curl -fsSL https://github.com/glpi-project/glpi/releases/download/11.0.0-beta5/glpi-11.0.0-beta5.tgz -o /tmp/glpi.tgz \
     && tar -xzf /tmp/glpi.tgz -C /tmp/glpi --strip-components=1 \
     && rm /tmp/glpi.tgz
 

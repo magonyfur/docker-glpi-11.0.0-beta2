@@ -1,5 +1,6 @@
 version: '3.8'
 
+name: glpi-docker-MagSec-edition
 services:
   glpi:
     build: .
@@ -10,8 +11,9 @@ services:
     volumes:
       - glpi_files:/var/www/html/files
       - glpi_config:/var/www/html/config
+      - glpi_main:/var/www/html/
     environment:
-      - TZ=UTC
+      - TZ=Europe/Amsterdam # Set your timezone
       - DB_HOST=glpi-db # Internal hostname
       - DB_PORT=3306 # Internal port (always 3306 inside network)
     depends_on:
@@ -26,10 +28,10 @@ services:
     ports:
       - '3307:3306' # Map host port 3307 to container port 3306
     environment:
-      MYSQL_ROOT_PASSWORD: glpi_root_password_123
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: glpi_db
       MYSQL_USER: glpi_user
-      MYSQL_PASSWORD: glpi_password_123
+      MYSQL_PASSWORD: glpi_password
       MYSQL_ROOT_HOST: '%'
     volumes:
       - glpi_mysql_data:/var/lib/mysql
@@ -46,6 +48,7 @@ volumes:
   glpi_config:
   glpi_mysql_data:
   glpi_mysql_config:
+  glpi_main:
 
 networks:
   glpi-network:
