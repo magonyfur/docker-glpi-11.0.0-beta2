@@ -28,11 +28,13 @@ services:
     ports:
       - '3307:3306' # Map host port 3307 to container port 3306
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: glpi_db
-      MYSQL_USER: glpi_user
-      MYSQL_PASSWORD: glpi_password
+      MYSQL_ROOT_PASSWORD: root # Set your root password
+      # Note: It's recommended to change these credentials for production use
+      MYSQL_DATABASE: glpi_db # Set your database name
+      MYSQL_USER: glpi_user # Set your database credentials
+      MYSQL_PASSWORD: glpi_password # Set your database credentials
       MYSQL_ROOT_HOST: '%'
+      TZ: Europe/Amsterdam # Set your timezone
     volumes:
       - glpi_mysql_data:/var/lib/mysql
       - glpi_mysql_config:/etc/mysql/conf.d

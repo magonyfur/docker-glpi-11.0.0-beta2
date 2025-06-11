@@ -1,5 +1,5 @@
 # Use official PHP 8.2 image with Apache
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -57,10 +57,10 @@ RUN echo "* * * * * www-data /usr/local/bin/php /var/www/html/public/front/cron.
     && chmod 0644 /etc/cron.d/glpi
 
 # PHP configuration
-RUN echo "memory_limit = 256M\n\
-upload_max_filesize = 64M\n\
-post_max_size = 64M\n\
-max_execution_time = 600\n\
+RUN echo "memory_limit = 1024M\n\
+upload_max_filesize = 128M\n\
+post_max_size = 128M\n\
+max_execution_time = 1200\n\
 session.cookie_httponly = 1\n\
 session.cookie_secure = 0\n\
 session.use_strict_mode = 1" > /usr/local/etc/php/conf.d/glpi.ini
