@@ -70,15 +70,9 @@ HEALTHCHECK --interval=30s --timeout=3s \
     CMD curl -f http://localhost/ || exit 1
 
 # Startup script
-COPY docker-entrypoint.sh /usr/local/bin/
+ADD https://raw.githubusercontent.com/magonyfur/docker-glpi-11.0.0-beta2/refs/heads/master/docker-entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-
-# Remove installer if it exists
-RUN if [ -f "/var/www/html/install/install.php" ]; then \
-        rm -f /var/www/html/install/install.php && \
-        echo "Installer removed"; \
-    fi
 
 CMD ["apache2-foreground"]
